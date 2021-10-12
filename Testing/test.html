@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <iframe name="test01"></iframe>
+    <iframe name="test02"></iframe>
+    <iframe name="test03"></iframe>
+
+    <script src="./main.js"></script> -->
+    <!-- <script type="module">
+      import { name, age } from "./moduleTest.js";
+      console.log(name, age);
+    </script> -->
+
+    <script>
+      const promise1 = Promise.resolve(3);
+      const promise2 = new Promise((resolve, reject) =>
+        setTimeout(reject, 1000, "reject foo")
+      );
+      const promise3 = new Promise((resolve, reject) =>
+        setTimeout(resolve, 3000, "resolve bar")
+      );
+      const promises = [promise1, promise2, promise3];
+
+      Promise.all(promises)
+        .then((results) => console.log(results))
+        .catch((fail) => console.log(fail)); // (1 秒後出現)"reject foo"
+
+      Promise.allSettled(promises).then((results) => console.log(results));
+      /*
+      (3 秒後出現)
+      [
+        {status: "fulfilled", value: 3}, 
+        {status: "rejected", value: "reject foo"}, 
+        {status: "fulfilled", value: "resolve bar"}, 
+      ]
+      */
+    </script>
+  </body>
+</html>

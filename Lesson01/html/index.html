@@ -1,12 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+    <style>
+      .videoContainer {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
     <h1>Main Page</h1>
-</body>
+    <div>
+      <button onclick="downloadVideo()">Download Video</button>
+      <button onclick="cancelDownload()">Cancel download Video</button>
+      <div class="videoContainer">
+        <div class="videoWrapper"></div>
+        <p class="reports"></p>
+      </div>
+    </div>
+    <script>
+      let controller;
+      let progressAnim;
+      let animCount = 0;
+      const videoWrapper = document.querySelector(".videoWrapper");
+      const reports = document.querySelector(".reports");
+
+      function downloadVideo() {
+        controller = new AbortController();
+        const signal = controller.signal;
+        setTimeout(cancelDownload, 10); //abort the file download
+
+        fetch("http://192.168.1.106:5000/demo.mp4", { signal })
+          .then((res) => {
+            if (res.status === 200) {
+              runAnimation();
+              setTimeout(() => console.log("Body used: ", res.bodyUsed), 1);
+              return res.blob();
+            } else {
+              throw new Error("Failed to fetch");
+            }
+          })
+          .then((blob) => {
+            const video = document.createElement("video");
+            video.setAttribute("controls", "");
+            video.style.width = "500px";
+            video.src = URL.createObjectURL(blob);
+            videoWrapper.appendChild(video);
+
+            reports.textContent = "Video ready to play";
+          })
+          .catch((e) => {
+            console.log(e);
+            reports.textContent = "Download error: " + e.message;
+          })
+          .finally(() => {
+            clearInterval(progressAnim);
+            animCount = 0;
+          });
+      }
+
+      function cancelDownload() {
+        controller.abort();
+      }
+
+      function runAnimation() {
+        progressAnim = setInterval(() => {
+          switch (animCount++ & 3) {
+            case 0:
+              reports.textContent =
+                "Download occuring; waiting for video player to be constructed";
+              break;
+            case 1:
+              reports.textContent =
+                "Download occuring; waiting for video player to be constructed.";
+              break;
+            case 2:
+              reports.textContent =
+                "Download occuring; waiting for video player to be constructed..";
+              break;
+            case 3:
+              reports.textContent =
+                "Download occuring; waiting for video player to be constructed...";
+              break;
+          }
+        }, 300);
+      }
+    </script>
+  </body>
 </html>

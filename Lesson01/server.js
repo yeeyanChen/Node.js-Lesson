@@ -8,13 +8,65 @@ const qs = require("querystring");
 const sendResponse = (url, statusCode, response) => {
   fs.readFile(`./html/${url}`, (err, data) => {
     if (err) {
+      console.log(err);
       //error when reading file
       response.statusCode = 500;
       response.setHeader("Content-Type", "text/plain");
       response.end("Sorry, internal error");
     } else {
       response.statusCode = statusCode;
+      let csp = "script-src 'self' 'unsafe-inline'";
+      if (url === "test.html") {
+        response.setHeader("Content-Security-Policy", csp);
+      }
       response.setHeader("Content-Type", "text/html");
+      response.end(data);
+    }
+  });
+};
+
+//see the image online
+const sendImgResponse = (filename, statusCode, response) => {
+  fs.readFile(`./img/${filename}`, (err, data) => {
+    filename = encodeURIComponent(filename);
+    if (err) {
+      console.log(err);
+      //error when reading file
+      response.statusCode = 500;
+      response.setHeader("Content-Type", "text/plain");
+      response.end("Sorry, internal error");
+    } else {
+      response.statusCode = statusCode;
+
+      response.setHeader(
+        "Content-Disposition",
+        `inline;filename*=utf-8''${filename};filename=${filename}`
+      );
+      response.setHeader("Content-Type", "image/png");
+      response.end(data);
+    }
+  });
+};
+
+//see the video online
+const sendVideoResponse = (filename, statusCode, response) => {
+  fs.readFile(`./videos/${filename}`, (err, data) => {
+    filename = encodeURIComponent(filename);
+    if (err) {
+      console.log(err);
+      //error when reading file
+      response.statusCode = 500;
+      response.setHeader("Content-Type", "text/plain");
+      response.end("Sorry, internal error");
+    } else {
+      response.statusCode = statusCode;
+
+      response.setHeader(
+        "Content-Disposition",
+        `inline;filename*=utf-8''${filename};filename=${filename}`
+      );
+      // response.setHeader("Content-Type", "application/octet-stream");
+      response.setHeader("Content-Type", "video/mp4");
       response.end(data);
     }
   });
@@ -27,7 +79,6 @@ const server = http.createServer((request, response) => {
   //   console.log(request);
   //   console.log(response);
   let { url, method, headers } = request;
-  console.log(headers);
   // console.log(request);
   // console.log(url); //此 url 會包含 query string
 
@@ -55,6 +106,15 @@ const server = http.createServer((request, response) => {
       case "/login-fail":
         sendResponse(`login/login-fail${selector}.html`, 200, response);
         break;
+      case "/test":
+        sendResponse(`test.html`, 200, response);
+        break;
+      case "/Vue3.png":
+        sendImgResponse(`Vue3.png`, 200, response);
+        break;
+      case "/demo.mp4":
+        sendVideoResponse(`demo.mp4`, 200, response);
+        break;
       default:
         sendResponse(`404${selector}.html`, 404, response);
     }
@@ -72,6 +132,7 @@ const server = http.createServer((request, response) => {
         body = Buffer.concat(body).toString();
         body = qs.parse(body);
 
+        //驗證登入
         if (body.username === "yeeyan" && body.password === "dan123") {
           response.statusCode = 301;
           response.setHeader("Location", "/login-success");
