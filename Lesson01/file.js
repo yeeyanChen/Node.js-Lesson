@@ -1,10 +1,13 @@
 const fs = require("fs");
 var path = require("path");
 
-fs.readFile("html", { encoding: "utf8" }, (err, data) => {
-  console.log(err);
-  console.log(data);
-});
+// fs.readFile("html", { encoding: "utf8" }, (err, data) => {
+//   console.log(err);
+//   console.log(data);
+// });
+
+console.log(AbortController);
+// console.log(DOMException);
 
 // var filepath = "/tmp/demo/js/test.js";
 
@@ -13,3 +16,8 @@ fs.readFile("html", { encoding: "utf8" }, (err, data) => {
 
 // var uuid = require("node-uuid");
 // console.log(uuid.v1());
+
+fs.open("./html/404-zh-TW.html", "r", (err, fd) => {
+  if (err) throw err;
+  console.log(fd);
+});

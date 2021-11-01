@@ -47,10 +47,18 @@ const sendImgResponse = (filename, statusCode, response) => {
     }
   });
 };
+const ac = new AbortController();
+const signal = ac.signal;
+ac.signal.onabort = () => {
+  console.log("read request aborted");
+};
 
 //see the video online
 const sendVideoResponse = (filename, statusCode, response) => {
-  fs.readFile(`./videos/${filename}`, (err, data) => {
+  // setTimeout(function () {
+  //   ac.abort();
+  // }, 1);
+  fs.readFile(`./videos/${filename}`, { signal }, (err, data) => {
     filename = encodeURIComponent(filename);
     if (err) {
       console.log(err);
@@ -72,8 +80,10 @@ const sendVideoResponse = (filename, statusCode, response) => {
   });
 };
 
-const port = 5000;
-const ip = "192.168.1.106"; //localhost //127.0.0.1
+const port = process.env.PORT || 8080;
+// const ip = "192.168.1.106"; //localhost //127.0.0.1/
+const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
+console.log(process.env);
 
 const server = http.createServer((request, response) => {
   //   console.log(request);
@@ -88,7 +98,7 @@ const server = http.createServer((request, response) => {
   let lang = requestURL.searchParams.get("lang");
   let selector = lang === "en" ? "" : lang === "zh-TW" ? "-zh-TW" : "";
   url = requestURL.pathname; //URL 實例的 pathname 不會包含 query string
-
+  url = decodeURIComponent(url);
   if (method === "GET") {
     switch (url) {
       case "/":
@@ -96,6 +106,9 @@ const server = http.createServer((request, response) => {
         break;
       case "/about":
         sendResponse(`about${selector}.html`, 200, response);
+        break;
+      case "/promise":
+        sendResponse(`promise${selector}.html`, 200, response);
         break;
       case "/login":
         sendResponse(`login/login${selector}.html`, 200, response);
@@ -114,6 +127,9 @@ const server = http.createServer((request, response) => {
         break;
       case "/demo.mp4":
         sendVideoResponse(`demo.mp4`, 200, response);
+        break;
+      case "/不為誰而做的歌.MP4":
+        sendVideoResponse(`不為誰而做的歌.MP4`, 200, response);
         break;
       default:
         sendResponse(`404${selector}.html`, 404, response);
@@ -149,6 +165,8 @@ const server = http.createServer((request, response) => {
 
 // console.log(server);
 
-server.listen(port, ip, () => {
-  console.log(`Server is running at http://${ip}:${port}`);
-});
+// server.listen(port, ip, () => {
+//   console.log(`Server is running at http://${ip}:${port}`);
+// });
+
+server.listen(port);

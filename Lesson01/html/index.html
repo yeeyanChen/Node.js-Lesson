@@ -31,10 +31,11 @@
       function downloadVideo() {
         controller = new AbortController();
         const signal = controller.signal;
-        setTimeout(cancelDownload, 10); //abort the file download
+        // setTimeout(cancelDownload, 10); //abort the file download
 
-        fetch("http://192.168.1.106:5000/demo.mp4", { signal })
+        fetch("/不為誰而做的歌.MP4", { signal })
           .then((res) => {
+            console.log(res.bodyUsed); //false
             if (res.status === 200) {
               runAnimation();
               setTimeout(() => console.log("Body used: ", res.bodyUsed), 1);
@@ -53,6 +54,9 @@
             reports.textContent = "Video ready to play";
           })
           .catch((e) => {
+            console.log(e instanceof Error);
+            console.log(e instanceof DOMException);
+            console.log(e.name);
             console.log(e);
             reports.textContent = "Download error: " + e.message;
           })

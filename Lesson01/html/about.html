@@ -5,8 +5,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      #fetch {
+        display: block;
+      }
+      #fetch.hidden {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <h1>About Page</h1>
+    <button onclick="startFetch()">startFetch</button>
+    <button onclick="abortFetch()">abort fetching</button>
+    <p id="fetch" class="hidden">start fetching...</p>
+
+    <script>
+      class AbortError extends Error {
+        constructor(message) {
+          super(message);
+          this.name = "AbortError";
+        }
+      }
+      const ac = new AbortController();
+      function returnPromise({ ac }) {
+        let fetchText = document.getElementById("fetch");
+        fetchText.classList.remove("hidden");
+
+        return new Promise((resolve, reject) => {
+          if (ac.signal.aborted) {
+            return reject(new AbortError("task handler failed", "AbortError"));
+          }
+          const timer = setTimeout(() => {
+            console.log("task end!");
+            fetchText.innerHTML = "fetched done!";
+            resolve(1);
+          }, 5000);
+
+          ac.signal.addEventListener(
+            "abort",
+            (e) => {
+              clearTimeout(timer);
+              fetchText.innerHTML = "fetched failed :(";
+              reject(new AbortError("task handler failed", "AbortError"));
+            },
+            { once: true }
+          );
+        });
+      }
+
+      function startFetch() {
+        returnPromise({ ac })
+          .then((v) => {
+            console.log(v);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
+
+      function abortFetch() {
+        ac.abort();
+      }
+    </script>
   </body>
 </html>
