@@ -7,7 +7,6 @@ var path = require("path");
 // });
 
 console.log(AbortController);
-console.log("fuck");
 // console.log(DOMException);
 
 // var filepath = "/tmp/demo/js/test.js";
