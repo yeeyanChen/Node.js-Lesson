@@ -12,6 +12,11 @@ fs.readFile("./docs/UTF-16_LE.txt", function (err, data) {
   //UTF-16_example01.txt <Buffer ff fe 08 d8 45 df>
 });
 
+// fs.readFile("./docs/UTF-16_LE.txt", "utf8", function (err, data) {
+//   console.log("UTF-16_LE.txt  utf8", data);
+//   //UTF-16_example01.txt <Buffer ff fe 08 d8 45 df>
+// });
+
 //說明電腦是 LE
 console.log(String.fromCharCode(0xd808, 0xdf45)); //𒍅
 console.log("\ud808\udf45"); //𒍅

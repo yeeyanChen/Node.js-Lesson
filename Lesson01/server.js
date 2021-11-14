@@ -49,7 +49,7 @@ const sendImgResponse = (filename, statusCode, response) => {
 };
 const ac = new AbortController();
 const signal = ac.signal;
-ac.signal.onabort = () => {
+signal.onabort = () => {
   console.log("read request aborted");
 };
 
