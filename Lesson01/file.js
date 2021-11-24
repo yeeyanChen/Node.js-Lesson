@@ -22,3 +22,5 @@ fs.open("./html/404-zh-TW.html", "r", (err, fd) => {
   if (err) throw err;
   console.log(fd);
 });
+
+console.log("dasd");

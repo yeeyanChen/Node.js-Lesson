@@ -81,9 +81,9 @@ const sendVideoResponse = (filename, statusCode, response) => {
 };
 
 const port = process.env.PORT || 8080;
-// const ip = "192.168.1.106"; //localhost //127.0.0.1/
-const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
-console.log(process.env);
+const ip = "192.168.1.106"; //localhost //127.0.0.1/
+// const ip = "162.240.12.17"; //localhost //127.0.0.1/
+// const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
 
 const server = http.createServer((request, response) => {
   //   console.log(request);
@@ -165,8 +165,8 @@ const server = http.createServer((request, response) => {
 
 // console.log(server);
 
-// server.listen(port, ip, () => {
-//   console.log(`Server is running at http://${ip}:${port}`);
-// });
+server.listen(port, ip, () => {
+  console.log(`Server is running at http://${ip}:${port}`);
+});
 
-server.listen(port);
+// server.listen(port);

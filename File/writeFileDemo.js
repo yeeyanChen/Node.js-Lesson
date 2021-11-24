@@ -17,6 +17,7 @@ console.log(utf16buffer3.toString("base64")); //S0ZD
 const utf16buffer4 = Buffer.from("믯䮿", "utf16le");
 console.log("utf16buffer 4", utf16buffer4); //<Buffer ef bb bf 4b>
 console.log(utf16buffer4.toString("utf16le")); //믯䮿
+console.log(utf16buffer4.toString("utf16le", 0, 2)); //믯
 console.log(utf16buffer4.toString("utf8")); //K
 
 const utf16buffer5 = Buffer.from("믯䮿", "latin1");
@@ -31,13 +32,36 @@ const utf16buffer7 = Buffer.from("4b46", "hex");
 console.log("utf16buffer 7", utf16buffer7); //<Buffer 4b 46>
 console.log(utf16buffer7.toString("hex")); //4b46
 
-// fs.writeFile("./docs/test.txt", utf16buffer6, function (err) {
-//   console.log("test.txt writing done");
+const utf8buffer1 = Buffer.from("我", "utf8");
+console.log("utf8buffer 1", utf8buffer1);
+
+fs.writeFile("./docs/test.txt", utf16buffer4, function (err) {
+  console.log("test.txt writing done");
+});
+
+// fs.writeFile("./docs/TESTING-2.txt", utf16buffer4, "utf16le", function (err) {
+//   console.log("TESTING-2.txt writing done");
 // });
 
-// fs.writeFile("./docs/smileFace_utf16le.txt", "S0Y=", "base64", function (err) {
-//   console.log("smileFace_utf16le.txt writing done");
-// });
+//TESTING-2.txt 為具有 BOM 的 UTF-8 編碼
+fs.writeFile("./docs/TESTING-2.txt", "믯䮿", "utf16le", function (err) {
+  console.log("TESTING-2.txt writing done");
+});
+//將 <Buffer ef bb bf 4b> 寫入，所以檔案內容為 "K"
+
+fs.writeFile("./docs/TESTING-2.txt", "믯䮿", "utf8", function (err) {
+  console.log("TESTING-2.txt writing done");
+});
+//將 <Buffer eb af af e4 ae bf> 寫入，所以檔案內容為 "믯䮿"
+
+// fs.writeFile(
+//   "./docs/writeDemo_utf16le.txt",
+//   "S0Y=",
+//   { encoding: "base64", mode: 0o666 },
+//   function (err) {
+//     console.log("writeDemo_utf16le.txt writing done");
+//   }
+// );
 
 // fs.readFile("./docs/test.txt", function (err, data) {
 //   console.log("test.txt", data);

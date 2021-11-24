@@ -35,8 +35,8 @@ fs.readFile(
 );
 
 /**
- *  english_utf8.txt 為 具有 BOM 的 UTF-8 編碼
- *  english_utf8.txt 內容為 "KF"
+ *  english_utf8_bom.txt 為 具有 BOM 的 UTF-8 編碼
+ *  english_utf8_bom.txt 內容為 "KF"
  *  記憶體內容為 <Buffer ef bb bf 4b 46>
  *
  *  編碼                            結果
