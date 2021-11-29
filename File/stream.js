@@ -1,13 +1,22 @@
 const fs = require("fs");
+const { Readable, Writable } = require( "stream" );
 const readStream = fs.createReadStream("./docs/doc03.txt", {
-  encoding: "utf8",
+  // encoding: "utf8"
+  //highWaterMark: 64*1024
 });
-const writeStream = fs.createWriteStream("./docs/doc04.txt");
+console.log(readStream instanceof Readable);
+console.log(global.ReadableStream);
+// console.log(Readable);
+// console.log(ReadStream);
 
-readStream.on("data", (chunk) => {
-  console.log("----- NEW CHUNK -----");
-  console.log(typeof chunk);
-  // console.log(chunk.toString());
-  // writeStream.write("\nNEW CHUNK\n");
-  // writeStream.write(chunk);
-});
+const writeStream = fs.createWriteStream("./docs/doc04.txt");
+console.log(readStream instanceof Writable);
+
+
+// readStream.on("data", (chunk) => {
+//   console.log("----- NEW CHUNK -----");
+//   console.log(chunk)
+//   console.log(chunk.length);
+//   // writeStream.write("\nNEW CHUNK\n");
+//   // writeStream.write(chunk);
+// });

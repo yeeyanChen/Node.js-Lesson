@@ -67,7 +67,7 @@ fs.readFile(
  *  hex           4b46
  *  ucs2/usc-2    䙋  ("\u{464b}")
  *  base64        //5LAEYA
- */
+ */ 
 fs.readFile(
   "./docs/english_utf16le.txt",
   { encoding: "ascii" },
