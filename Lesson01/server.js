@@ -139,6 +139,10 @@ const server = http.createServer((request, response) => {
       let body = [];
 
       //監聽緩衝區裡的數據是否可以讀取
+      console.log(
+        "request 是 fs.ReadStream 嗎?",
+        request instanceof fs.ReadStream
+      );
       request.on("data", (chunk) => {
         console.log("chunk", chunk);
         body.push(chunk);
@@ -147,7 +151,7 @@ const server = http.createServer((request, response) => {
       //監聽請求數據是否已經全部被讀取
       request.on("end", () => {
         body = Buffer.concat(body).toString();
-        console.log(body)
+        console.log(body);
         body = qs.parse(body);
 
         //驗證登入
