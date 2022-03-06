@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const glob = require("glob");
 require("../Testing/test.js");
 
 console.log("file.js ===================");
@@ -8,6 +7,8 @@ console.log("file.js ===================");
 console.log(__dirname);
 console.log(process.cwd());
 console.log(path.resolve());
+console.log(path.resolve("NodeJsQQQ"));
+console.log(path.join("NodeJsQQQ"));
 
 console.log("===========================");
 

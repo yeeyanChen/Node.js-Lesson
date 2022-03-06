@@ -7,7 +7,6 @@ class MyReadable extends stream.Readable {
   }
 
   _read(size) {
-    // console.log("_read", size);
     // console.log("data", this.data);
     if (this.data.length) {
       const chunk = this.data.slice(0, size);

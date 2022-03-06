@@ -1,8 +1,10 @@
 const http = require("http");
 const fs = require("fs");
+const stream = require("stream");
 const path = require("path");
 const qs = require("querystring");
-// console.log(http);
+const YeeyanRequest = require("./YeeyanRequest");
+
 // console.log( process.argv );
 
 const sendResponse = (url, statusCode, response) => {
@@ -19,8 +21,14 @@ const sendResponse = (url, statusCode, response) => {
       if (url === "test.html") {
         response.setHeader("Content-Security-Policy", csp);
       }
-      response.setHeader("Content-Type", "text/html");
+      // response.setHeader("Content-Type", "text/html");
+      // response.setHeader("Content-Length", Buffer.byteLength(data));
+      response.writeHead(200, { "Content-Type": "text/html" });
+      console.log(response.getHeader("Content-Type")); //undefined
       response.end(data);
+      response.on("finish", () => {
+        console.log("finish response");
+      });
     }
   });
 };
@@ -81,93 +89,122 @@ const sendVideoResponse = (filename, statusCode, response) => {
 };
 
 const port = process.env.PORT || 8080;
-const ip = "192.168.1.106"; //localhost //127.0.0.1/
+const ip = "localhost";
+// const ip = "192.168.1.107"; //localhost //127.0.0.1/
 // const ip = "162.240.12.17"; //localhost //127.0.0.1/
 // const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
 
-const server = http.createServer((request, response) => {
-  //   console.log(request);
-  //   console.log(response);
-  let { url, method, headers } = request;
-  // console.log(request);
-  // console.log(url); //此 url 會包含 query string
+const server = http.createServer(
+  //   {
+  //     IncomingMessage: YeeyanRequest,
+  //   },
+  (request, response) => {
+    // console.log(request);
+    //   console.log(response);
+    let { url, method, headers } = request;
+    // console.log(url, method);
+    // console.log(headers);
+    // console.log(request);
+    // console.log(url); //此 url 會包含 query string
 
-  let requestURL = new URL(url, `http://${ip}:${port}`);
-  // console.log(requestURL);
-  // console.log(requestURL.searchParams[Symbol.iterator]);
-  let lang = requestURL.searchParams.get("lang");
-  let selector = lang === "en" ? "" : lang === "zh-TW" ? "-zh-TW" : "";
-  url = requestURL.pathname; //URL 實例的 pathname 不會包含 query string
-  url = decodeURIComponent(url);
-  if (method === "GET") {
-    switch (url) {
-      case "/":
-        sendResponse(`index${selector}.html`, 200, response);
-        break;
-      case "/about":
-        sendResponse(`about${selector}.html`, 200, response);
-        break;
-      case "/promise":
-        sendResponse(`promise${selector}.html`, 200, response);
-        break;
-      case "/login":
-        sendResponse(`login/login${selector}.html`, 200, response);
-        break;
-      case "/login-success":
-        sendResponse(`login/login-success${selector}.html`, 200, response);
-        break;
-      case "/login-fail":
+    let requestURL = new URL(url, `http://${ip}:${port}`);
+    // console.log(requestURL);
+    // console.log(requestURL.searchParams[Symbol.iterator]);
+    let lang = requestURL.searchParams.get("lang");
+    let selector = lang === "en" ? "" : lang === "zh-TW" ? "-zh-TW" : "";
+    url = requestURL.pathname; //URL 實例的 pathname 不會包含 query string
+    url = decodeURIComponent(url);
+    console.log(url, method);
+    if (method === "GET") {
+      switch (url) {
+        case "/":
+          sendResponse(`index${selector}.html`, 200, response);
+          break;
+        case "/about":
+          sendResponse(`about${selector}.html`, 200, response);
+          break;
+        case "/promise":
+          sendResponse(`promise${selector}.html`, 200, response);
+          break;
+        case "/login":
+          sendResponse(`login/login${selector}.html`, 200, response);
+          break;
+        case "/login-success":
+          sendResponse(`login/login-success${selector}.html`, 200, response);
+          break;
+        case "/login-fail":
+          sendResponse(`login/login-fail${selector}.html`, 200, response);
+          break;
+        case "/test":
+          sendResponse(`test.html`, 200, response);
+          break;
+        case "/Vue3.png":
+          sendImgResponse(`Vue3.png`, 200, response);
+          break;
+        case "/demo.mp4":
+          sendVideoResponse(`demo.mp4`, 200, response);
+          break;
+        case "/不為誰而做的歌.MP4":
+          sendVideoResponse(`不為誰而做的歌.MP4`, 200, response);
+          break;
+        default:
+          sendResponse(`404${selector}.html`, 404, response);
+      }
+    } else if (method === "POST") {
+      if (url === "/process-login") {
+        let body = [];
+
+        console.log(request);
+        console.log(
+          "request 是 stream.Readable 嗎????",
+          request instanceof stream.Readable
+        );
+
+        console.log(
+          "request 是 http.ClientRequest 嗎????",
+          request instanceof http.ClientRequest
+        );
+
+        console.log(
+          "response 是 stream.Writable 嗎????",
+          response instanceof stream.Writable
+        );
+
+        console.log(
+          "response 是 http.ServerResponse 嗎????",
+          response instanceof http.ServerResponse
+        );
+
+        //監聽緩衝區裡的數據是否可以讀取
+        request.on("data", (chunk) => {
+          console.log("chunk", chunk);
+          body.push(chunk);
+        });
+
+        //監聽請求數據是否已經全部被讀取
+        request.on("end", () => {
+          body = Buffer.concat(body).toString();
+          console.log(body);
+          body = qs.parse(body);
+
+          //驗證登入
+          if (body.username === "yeeyan" && body.password === "dan123") {
+            response.statusCode = 301; // Moved Permanently (重定向後會改為 GET)
+            response.setHeader("Location", "/login-success");
+          } else {
+            response.statusCode = 307; // Temporary Redirect (重定向後還是 POST)
+            response.setHeader("Location", "/login-fail");
+          }
+
+          response.end();
+        });
+      } else if (url === "login-fail") {
+        //307 重導向後還是 POST
         sendResponse(`login/login-fail${selector}.html`, 200, response);
-        break;
-      case "/test":
-        sendResponse(`test.html`, 200, response);
-        break;
-      case "/Vue3.png":
-        sendImgResponse(`Vue3.png`, 200, response);
-        break;
-      case "/demo.mp4":
-        sendVideoResponse(`demo.mp4`, 200, response);
-        break;
-      case "/不為誰而做的歌.MP4":
-        sendVideoResponse(`不為誰而做的歌.MP4`, 200, response);
-        break;
-      default:
-        sendResponse(`404${selector}.html`, 404, response);
-    }
-  } else if (method === "POST") {
-    if (url === "/process-login") {
-      let body = [];
-
-      //監聽緩衝區裡的數據是否可以讀取
-      console.log(
-        "request 是 fs.ReadStream 嗎?",
-        request instanceof fs.ReadStream
-      );
-      request.on("data", (chunk) => {
-        console.log("chunk", chunk);
-        body.push(chunk);
-      });
-
-      //監聽請求數據是否已經全部被讀取
-      request.on("end", () => {
-        body = Buffer.concat(body).toString();
-        console.log(body);
-        body = qs.parse(body);
-
-        //驗證登入
-        if (body.username === "yeeyan" && body.password === "dan123") {
-          response.statusCode = 301;
-          response.setHeader("Location", "/login-success");
-        } else {
-          response.statusCode = 301;
-          response.setHeader("Location", "/login-fail");
-        }
-
-        response.end();
-      });
+      }
     }
   }
-});
+);
 
 // console.log(server);
 

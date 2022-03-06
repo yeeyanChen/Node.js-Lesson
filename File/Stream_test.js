@@ -1,8 +1,8 @@
-// const { Stream } = require("internal/streams/legacy");
+const { Stream } = require("stream");
 
-// console.log(Stream);
+console.log(Stream.prototype.on);
 
-console.log("ddd");
+// console.log("ddd");
 
-const EE = require("events");
-console.log(EE);
+// const EE = require("events");
+// console.log(EE);

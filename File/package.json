@@ -1,0 +1,19 @@
+{
+  "name": "file",
+  "version": "1.0.0",
+  "description": "",
+  "main": "MyReadable.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "glob": "^7.1.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
