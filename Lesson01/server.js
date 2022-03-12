@@ -5,9 +5,39 @@ const path = require("path");
 const qs = require("querystring");
 const YeeyanRequest = require("./YeeyanRequest");
 
-// console.log( process.argv );
-
 const sendResponse = (url, statusCode, response) => {
+  console.log("response:", url);
+  const readstream = fs.createReadStream(`./html/${url}`);
+
+  readstream.pipe(response);
+
+  // readstream.on("data", (chunk) => {
+  //   response.write(chunk);
+  // });
+
+  // readstream.on("end", () => {
+  //   response.end();
+  // });
+
+  readstream.on("err", () => {
+    response.statusCode = 500;
+    response.setHeader("Content-Type", "text/plain");
+    response.end("Sorry, internal error");
+  });
+
+  response.on("finish", () => {
+    console.log("response is finished");
+  });
+
+  let csp = "script-src 'self' 'unsafe-inline'";
+  if (url === "test.html") {
+    response.setHeader("Content-Security-Policy", csp);
+  }
+
+  response.writeHead(statusCode, { "Content-Type": "text/html" });
+};
+
+const sendResponseV2 = (url, statusCode, response) => {
   fs.readFile(`./html/${url}`, (err, data) => {
     if (err) {
       console.log(err);
@@ -27,7 +57,7 @@ const sendResponse = (url, statusCode, response) => {
       console.log(response.getHeader("Content-Type")); //undefined
       response.end(data);
       response.on("finish", () => {
-        console.log("finish response");
+        console.log("response is finished");
       });
     }
   });
@@ -99,7 +129,7 @@ const server = http.createServer(
   //     IncomingMessage: YeeyanRequest,
   //   },
   (request, response) => {
-    // console.log(request);
+    // console.log("request.statusCode", request.statusCode);
     //   console.log(response);
     let { url, method, headers } = request;
     // console.log(url, method);
@@ -138,6 +168,11 @@ const server = http.createServer(
         case "/test":
           sendResponse(`test.html`, 200, response);
           break;
+        case "/api":
+          // response.writeHead(200, { "Content-Type": "application/json" });
+          response.end({ result: "success bitch" });
+          // sendResponse(`test.html`, 200, response);
+          break;
         case "/Vue3.png":
           sendImgResponse(`Vue3.png`, 200, response);
           break;
@@ -146,6 +181,9 @@ const server = http.createServer(
           break;
         case "/不為誰而做的歌.MP4":
           sendVideoResponse(`不為誰而做的歌.MP4`, 200, response);
+          break;
+        case "/csrf_demo":
+          sendResponse(`csrf_demo.html`, 200, response);
           break;
         default:
           sendResponse(`404${selector}.html`, 404, response);
@@ -198,7 +236,7 @@ const server = http.createServer(
 
           response.end();
         });
-      } else if (url === "login-fail") {
+      } else if (url === "/login-fail") {
         //307 重導向後還是 POST
         sendResponse(`login/login-fail${selector}.html`, 200, response);
       }

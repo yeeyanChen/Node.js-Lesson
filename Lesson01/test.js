@@ -7,11 +7,16 @@
 const http = require("http");
 const stream = require("stream");
 
-console.log(http.METHODS);
-console.log(http.STATUS_CODES);
-console.log(
-  stream.Writable.prototype.isPrototypeOf(http.OutgoingMessage.prototype)
-);
-console.log(
-  stream.Readable.prototype.isPrototypeOf(http.IncomingMessage.prototype)
-);
+// console.log(http.METHODS);
+// console.log(http.STATUS_CODES);
+// console.log(
+//   stream.Writable.prototype.isPrototypeOf(http.OutgoingMessage.prototype)
+// );
+// console.log(
+//   stream.Readable.prototype.isPrototypeOf(http.IncomingMessage.prototype)
+// );
+
+const { Url, URL } = require("url");
+console.log(Url);
+console.log(URL);
+console.log(globalThis.URL === URL);

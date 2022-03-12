@@ -7,8 +7,14 @@
 // let e = new URL("LOL", "");
 // console.log(e.href);
 
-// https://developer.mozilla.org/en-US/LOL
-console.log(new URL("LOL", "https://developer.mozilla.org/en-US/docs").href);
-// https://developer.mozilla.org/LOL
-console.log(new URL("/LOL", "https://developer.mozilla.org/en-US/docs").href);
-console.log(process);
+// // https://developer.mozilla.org/en-US/LOL
+// console.log(new URL("LOL", "https://developer.mozilla.org/en-US/docs").href);
+// // https://developer.mozilla.org/LOL
+// console.log(new URL("/LOL", "https://developer.mozilla.org/en-US/docs").href);
+// console.log(process);
+
+const url = require("url");
+
+let uri = "https://google.com/index.html?lang=zh-TW&foo=bar";
+let result = url.parse(uri, true);
+console.log(result instanceof url.Url);
