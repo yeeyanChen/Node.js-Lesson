@@ -4,6 +4,9 @@ const stream = require("stream");
 const path = require("path");
 const qs = require("querystring");
 const YeeyanRequest = require("./YeeyanRequest");
+console.log(
+  stream.Readable.prototype.isPrototypeOf(http.IncomingMessage.prototype)
+);
 
 const sendResponse = (url, statusCode, request, response) => {
   console.log("response:", url);
@@ -185,7 +188,7 @@ const server = http.createServer(
             request.headers["origin"]
           );
 
-          response.setHeader("Access-Control-Allow-Methods", "GET,POST");
+          response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE");
           response.setHeader(
             "Access-Control-Allow-Headers",
             "yeeyan,content-type"
@@ -236,7 +239,6 @@ const server = http.createServer(
             sendResponse(`exposeHeader.html`, 200, request, response);
             break;
           case "/api":
-            console.log("FUCK you");
             if (request.headers["origin"]) {
               response.setHeader(
                 "Access-Control-Allow-Origin",
@@ -328,6 +330,16 @@ const server = http.createServer(
           response.statusCode = 200;
           response.end();
         }
+        break;
+      case "DELETE":
+        if (request.headers["origin"]) {
+          response.setHeader(
+            "Access-Control-Allow-Origin",
+            request.headers["origin"]
+          );
+        }
+        response.statusCode = 200;
+        response.end();
     }
   }
 );

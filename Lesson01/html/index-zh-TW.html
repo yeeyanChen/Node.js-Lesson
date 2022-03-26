@@ -8,5 +8,25 @@
   </head>
   <body>
     <h1>首頁</h1>
+    <button onclick="sendAxiosGetRequest()">sendAxiosGetRequest</button>
+
+    <script>
+      let otherOriginUrl = "http://192.168.1.110:8080/api";
+      function sendAxiosGetRequest() {
+        fetch(otherOriginUrl, {
+          headers: {
+            // "X-YFUCKYOU": "QQ",
+            // SoCute: "Cute!",
+            YEEYAN: "COOL!",
+          },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
   </body>
 </html>

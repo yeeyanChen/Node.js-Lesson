@@ -5,12 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      div {
+        margin: 10px 0;
+      }
+    </style>
   </head>
   <body>
-    <button onclick="sendAxiosGetRequest()">sendAxiosGetRequest</button>
-    <button onclick="sendAxiosPostRequest()">sendAxiosPostRequest</button>
-    <button onclick="sendXhrPostRequest()">sendXhrPostRequest</button>
-    <button onclick="sendFetchPostRequest()">sendFetchPostRequest</button>
+    <div>
+      <button onclick="sendAxiosGetRequest()">sendAxiosGetRequest</button>
+    </div>
+    <div>
+      <button onclick="sendAxiosPostRequest()">sendAxiosPostRequest</button>
+    </div>
+    <div>
+      <button onclick="sendAxiosDELETERequest()">sendAxiosDELETERequest</button>
+    </div>
+    <div>
+      <button onclick="sendXhrPostRequest()">sendXhrPostRequest</button>
+    </div>
+    <div>
+      <button onclick="sendFetchPostRequest()">sendFetchPostRequest</button>
+    </div>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.js"
       integrity="sha512-MNW6IbpNuZZ2VH9ngFhzh6cUt8L/0rSVa60F8L22K1H72ro4Ki3M/816eSDLnhICu7vwH/+/yb8oB3BtBLhMsA=="
@@ -46,19 +62,31 @@
       let formdata = new FormData();
       formdata = undefined;
       // formdata.append("name", "yeeyan");
-      let otherOriginUrl = "http://192.168.1.110:8080/api";
+      let crossOriginUrl = "http://192.168.1.110:8080/api";
 
       function sendAxiosGetRequest() {
-        axios(
-          otherOriginUrl
-          // {
-          //   headers: {
-          //     // "X-YFUCKYOU": "QQ",
-          //     // SoCute: "Cute!",
-          //     YEEYAN: "COOL!",
-          //   },
-          // }
-        )
+        //Content-Type 為 application/json，但 axios.get 會把 Content-Type 移除，所以為簡單的跨域請求，不會發送預檢
+        axios
+          .get(crossOriginUrl, {
+            headers: {
+              // "X-YFUCKYOU": "QQ",
+              // SoCute: "Cute!",
+              // YEEYAN: "COOL!",
+              "Content-Type": "application/json",
+            },
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function sendAxiosDELETERequest() {
+        //DELETE method，為不簡單的跨域請求，會發送預檢
+        axios
+          .delete(crossOriginUrl)
           .then((res) => {
             console.log(res);
           })
@@ -68,8 +96,9 @@
       }
 
       function sendAxiosPostRequest() {
+        //Content-Type 為 application/json，但 axios.post 如果 body 是 undefined，會把 Content-Type 移除，所以為簡單的跨域請求，不會發送預檢
         axios
-          .post(otherOriginUrl, function () {}, {
+          .post(crossOriginUrl, undefined, {
             headers: {
               // "X-YFUCKYOU": "QQ",
               // SoCute: "Cute!",
@@ -86,7 +115,7 @@
 
       function sendXhrPostRequest() {
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", otherOriginUrl);
+        xhr.open("POST", crossOriginUrl);
         xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onloadend = function () {
@@ -96,7 +125,7 @@
       }
 
       function sendFetchPostRequest() {
-        fetch(otherOriginUrl, {
+        fetch(crossOriginUrl, {
           headers: {
             // "X-YFUCKYOU": "QQ",
             // SoCute: "Cute!",
