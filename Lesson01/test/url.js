@@ -15,6 +15,7 @@
 
 const url = require("url");
 
-let uri = "https://google.com/index.html?lang=zh-TW&foo=bar";
+let uri = "https://google";
 let result = url.parse(uri, true);
 console.log(result instanceof url.Url);
+console.log(result.path);

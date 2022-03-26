@@ -14,13 +14,11 @@
   <body>
     <h1>Main Page</h1>
     <div>
-      <h3>Use AbortController to cancel the video</h3>
+      <h3>Use Axios Cancel Token to cancel the video</h3>
       <button onclick="downloadVideoBaseOnAxios()">
         Download Video Base on Axios
       </button>
-      <button onclick="downloadVideoBaseOnFetch()">
-        Download Video Base on Fetch
-      </button>
+
       <button onclick="cancelDownload()">Cancel download Video</button>
       <div class="videoContainer">
         <div class="videoWrapper"></div>
@@ -33,22 +31,30 @@
       crossorigin="anonymous"
     ></script>
     <script>
-      let controller = new AbortController();
+      let controller;
       let progressAnim;
       let animCount = 0;
       const videoWrapper = document.querySelector(".videoWrapper");
       const reports = document.querySelector(".reports");
-      const signal = controller.signal;
+      const CancelToken = axios.CancelToken;
+      // const { token, cancel } = CancelToken.source();
 
-      signal.addEventListener("abort", function (e) {
+      function cancelledNotification(e) {
         console.log("QQ... It is cancelled :(", e);
-      });
+      }
 
       function downloadVideoBaseOnAxios() {
-        setTimeout(cancelDownload, 10); //abort the file download
+        let source = CancelToken.source();
+        token = source.token;
+        cancel = source.cancel;
+        token.subscribe(cancelledNotification);
 
+        setTimeout(cancelDownload, 10); //abort the file download
         axios
-          .get("/demo.mp4", { signal, responseType: "blob" })
+          .get("/demo.mp4", {
+            cancelToken: token,
+            responseType: "blob",
+          })
           .then((res) => {
             const video = document.createElement("video");
             video.setAttribute("controls", "");
@@ -63,6 +69,8 @@
             console.log(e instanceof DOMException);
             console.log(e.name);
             console.log(e);
+            token.reason = null;
+
             reports.textContent = "Download error: " + e.message;
           })
           .finally(() => {
@@ -71,45 +79,8 @@
           });
       }
 
-      function downloadVideoBaseOnFetch() {
-        controller = new AbortController();
-        const signal = controller.signal;
-        setTimeout(cancelDownload, 10); //abort the file download
-
-        fetch("/demo.mp4", { signal })
-          .then((res) => {
-            console.log(res.bodyUsed); //false
-            if (res.status === 200) {
-              runAnimation();
-              setTimeout(() => console.log("Body used: ", res.bodyUsed), 1);
-              return res.blob();
-            } else {
-              throw new Error("Failed to fetch");
-            }
-          })
-          .then((blob) => {
-            const video = document.createElement("video");
-            video.setAttribute("controls", "");
-            video.style.width = "500px";
-            video.src = URL.createObjectURL(blob);
-            videoWrapper.appendChild(video);
-
-            reports.textContent = "Video ready to play";
-          })
-          .catch((e) => {
-            console.log(e instanceof Error);
-            console.log(e instanceof DOMException);
-            console.log(e.name);
-            console.log(e);
-            reports.textContent = "Download error: " + e.message;
-          })
-          .finally(() => {
-            clearInterval(progressAnim);
-            animCount = 0;
-          });
-      }
       function cancelDownload() {
-        controller.abort();
+        cancel("The axios request is canceled");
       }
 
       function runAnimation() {

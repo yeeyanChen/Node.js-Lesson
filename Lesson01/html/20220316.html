@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>20220316</h1>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.js"
+      integrity="sha512-Kg0CewqPNO/ziOJuCq5eyl3P/V6OLz/Lb1I2m+yKS3lHZcGVFN/KOew18rWP+kTsL7haYdaqGjwHQCZrN0heLQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function sendRequest() {
+        axios("http://192.168.1.110/test.jsp", {
+          // credentials: "omit"
+          // credentials: "same-origin"
+          credentials: "include",
+        }).then((res) => {
+          console.log(res);
+        });
+      }
+    </script>
+  </body>
+</html>

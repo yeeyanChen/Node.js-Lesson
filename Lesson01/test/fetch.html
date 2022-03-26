@@ -7,15 +7,51 @@
     <title>Document</title>
   </head>
   <body>
+    <button onclick="sendRequest()">sendRequest</button>
+    <button onclick="sendAxiosRequest()">sendAxiosRequest</button>
+    <button onclick="sendLocalRequest()">sendLocalRequest</button>
+    <a href="https://huan-design.com/20220316"
+      >Go to huan-design.com/20220316</a
+    >
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.js"
+      integrity="sha512-Kg0CewqPNO/ziOJuCq5eyl3P/V6OLz/Lb1I2m+yKS3lHZcGVFN/KOew18rWP+kTsL7haYdaqGjwHQCZrN0heLQ=="
+      crossorigin="anonymous"
+    ></script>
     <script>
-      fetch("http://localhost:8080/loginee")
-        .then((res) => {
-          console.log("statusCode:", res);
-          // console.log(res);
+      function sendRequest() {
+        fetch("https://huan-design.com/20220316", {
+          // credentials: "omit"
+          // credentials: "same-origin"
+          credentials: "include",
         })
-        .catch((error) => {
-          console.error(error);
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      function sendAxiosRequest() {
+        axios("https://huan-design.com/20220316", {
+          withCredentials: "true",
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      function sendLocalRequest() {
+        fetch("http://localhost:8080/20220316", {
+          // credentials: "omit"
+          credentials: "same-origin",
+          // credentials: "include",
+        }).then((res) => {
+          console.log(res);
         });
+      }
     </script>
   </body>
 </html>

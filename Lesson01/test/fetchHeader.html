@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="sendAxiosGetRequest()">sendAxiosGetRequest</button>
+    <button onclick="sendAxiosPostRequest()">sendAxiosPostRequest</button>
+    <button onclick="sendXhrPostRequest()">sendXhrPostRequest</button>
+    <button onclick="sendFetchPostRequest()">sendFetchPostRequest</button>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.js"
+      integrity="sha512-MNW6IbpNuZZ2VH9ngFhzh6cUt8L/0rSVa60F8L22K1H72ro4Ki3M/816eSDLnhICu7vwH/+/yb8oB3BtBLhMsA=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // axios.interceptors.request.use(
+      //   (config) => {
+      //     console.log("request interceptor 1");
+      //     throw new Error("幹");
+      //     // return Promise.reject("nope");
+      //   },
+      //   (err) => {
+      //     console.log(err, " FUCK you");
+      //     // return Promise.reject(err);
+      //   },
+      //   {
+      //     synchronous: true,
+      //   }
+      // );
+      // axios.interceptors.response.use(
+      //   (config) => {
+      //     console.log("response interceptor 1");
+      //     return config;
+      //   },
+      //   (err) => {
+      //     console.log(err);
+
+      //     return Promise.reject(err);
+      //   }
+      // );
+
+      let formdata = new FormData();
+      formdata = undefined;
+      // formdata.append("name", "yeeyan");
+      let otherOriginUrl = "http://192.168.1.110:8080/api";
+
+      function sendAxiosGetRequest() {
+        axios(
+          otherOriginUrl
+          // {
+          //   headers: {
+          //     // "X-YFUCKYOU": "QQ",
+          //     // SoCute: "Cute!",
+          //     YEEYAN: "COOL!",
+          //   },
+          // }
+        )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function sendAxiosPostRequest() {
+        axios
+          .post(otherOriginUrl, function () {}, {
+            headers: {
+              // "X-YFUCKYOU": "QQ",
+              // SoCute: "Cute!",
+              "Content-Type": "application/json",
+            },
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function sendXhrPostRequest() {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", otherOriginUrl);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onloadend = function () {
+          console.log(this.response);
+        };
+        xhr.send(null);
+      }
+
+      function sendFetchPostRequest() {
+        fetch(otherOriginUrl, {
+          headers: {
+            // "X-YFUCKYOU": "QQ",
+            // SoCute: "Cute!",
+            "Content-Type": "application/json",
+          },
+          body: formdata,
+          method: "POST",
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+  </body>
+</html>
