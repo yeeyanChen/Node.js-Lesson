@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="sendRequest()">sendRequest</button>
+    <button onclick="sendXMLHttpRequest()">sendXMLHttpRequest</button>
+    <button onclick="sendAxiosRequest()">sendAxiosRequest</button>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.js"
+      integrity="sha512-Kg0CewqPNO/ziOJuCq5eyl3P/V6OLz/Lb1I2m+yKS3lHZcGVFN/KOew18rWP+kTsL7haYdaqGjwHQCZrN0heLQ=="
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script type="importmap">
+      {
+        "imports": {
+          "axios": "../node_modules/axios/lib/axios.js"
+        }
+      }
+    </script> -->
+    <script>
+      function sendRequest() {
+        fetch("http://192.168.1.107:8080/test-redirect-redirect", {
+          redirect: "follow",
+        })
+          .then((res) => {
+            console.log(res);
+            console.log("Redirected ?", res.redirected); //true
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      function sendXMLHttpRequest() {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://192.168.1.107:8080/test-redirect-redirect");
+
+        xhr.onloadend = function () {
+          console.log(this.response);
+        };
+        xhr.send();
+      }
+
+      function sendAxiosRequest() {
+        // maxRedirects 只限用於 Node.js 環境，所以以下設定無效
+        axios
+          .get("http://192.168.1.107:8080/test-redirect", { maxRedirects: 0 })
+          .then((res) => {
+            console.log(res);
+            console.log("responseData", res.data); //true
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+  </body>
+</html>

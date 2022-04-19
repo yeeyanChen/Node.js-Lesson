@@ -86,7 +86,8 @@
       function sendAxiosDELETERequest() {
         //DELETE method，為不簡單的跨域請求，會發送預檢
         axios
-          .delete(crossOriginUrl)
+          // .delete(crossOriginUrl)
+          .delete("http://162.240.12.17:5000/api")
           .then((res) => {
             console.log(res);
           })
@@ -98,11 +99,11 @@
       function sendAxiosPostRequest() {
         //Content-Type 為 application/json，但 axios.post 如果 body 是 undefined，會把 Content-Type 移除，所以為簡單的跨域請求，不會發送預檢
         axios
-          .post(crossOriginUrl, undefined, {
+          .post("http://192.168.1.110:8080/httppost", "fuck", {
             headers: {
               // "X-YFUCKYOU": "QQ",
               // SoCute: "Cute!",
-              "Content-Type": "application/json",
+              // "Content-Type": "application/json",
             },
           })
           .then((res) => {
@@ -115,13 +116,13 @@
 
       function sendXhrPostRequest() {
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", crossOriginUrl);
-        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.open("POST", "http://192.168.1.110:8080/httppost");
+        // xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onloadend = function () {
           console.log(this.response);
         };
-        xhr.send(null);
+        xhr.send("fuck");
       }
 
       function sendFetchPostRequest() {

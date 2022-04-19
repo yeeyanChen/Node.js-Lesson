@@ -3,10 +3,7 @@ const fs = require("fs");
 const stream = require("stream");
 const path = require("path");
 const qs = require("querystring");
-const YeeyanRequest = require("./YeeyanRequest");
-console.log(
-  stream.Readable.prototype.isPrototypeOf(http.IncomingMessage.prototype)
-);
+// const YeeyanRequest = require("./YeeyanRequest");
 
 const sendResponse = (url, statusCode, request, response) => {
   console.log("response:", url);
@@ -152,7 +149,7 @@ const sendVideoResponse = (filename, statusCode, request, response) => {
 };
 
 const port = process.env.PORT || 8080;
-const ip = "192.168.1.110"; //wifi ip
+const ip = "192.168.1.107"; //wifi ip
 // const ip = "127.0.0.1"; //localhost //127.0.0.1/
 // const ip = "162.240.12.17"; //localhost //127.0.0.1/
 // const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
@@ -165,14 +162,17 @@ const server = http.createServer(
     // console.log("request.statusCode", request.statusCode);
     //   console.log(response);
     let { url, method, headers } = request;
+    // console.log(request.setHeader);  //undefined
     // console.log(url, method);
     // console.log(headers);
     // console.log(request);
     // console.log(url); //此 url 會包含 query string
 
-    // console.log(headers);
+    console.log(headers);
+    console.log("url", url);
     let requestURL = new URL(url, `http://${ip}:${port}`);
-    // console.log(requestURL);
+
+    console.log(requestURL.protocol);
     // console.log(requestURL.searchParams[Symbol.iterator]);
     let lang = requestURL.searchParams.get("lang");
     let selector = lang === "en" ? "" : lang === "zh-TW" ? "-zh-TW" : "";
@@ -232,6 +232,25 @@ const server = http.createServer(
           case "/test":
             sendResponse(`test.html`, 200, request, response);
             break;
+          case "/test-redirect":
+            // http.get("./test");
+            // 轉址
+            response
+              .writeHead(301, {
+                Location: "/test",
+              })
+              .end();
+
+            // sendResponse(`test.html`, 301, request, response);
+            break;
+          case "/test-redirect-redirect":
+            // 轉址
+            response
+              .writeHead(301, {
+                Location: "/test-redirect",
+              })
+              .end();
+            break;
           case "/20220316":
             sendResponse(`20220316.html`, 200, request, response);
             break;
@@ -264,6 +283,41 @@ const server = http.createServer(
             break;
           case "/cancel-token":
             sendResponse(`cancel-token.html`, 200, request, response);
+            break;
+          case "/basic-auth":
+            let basicAuth = request.headers["authorization"];
+            console.log("Authorization request header", basicAuth);
+            if (basicAuth && basicAuth.startsWith("Basic ")) {
+              basicAuth = basicAuth.substring(6);
+              basicAuth = Buffer.from(basicAuth, "base64").toString("utf8");
+              console.log("basicAuth", basicAuth);
+              let sec = basicAuth.split(":");
+              if (
+                sec.length == 2 &&
+                sec[0] === "yeeyan" &&
+                sec[1] === "dan860430"
+              ) {
+                sendResponse(`basic-auth-success.html`, 200, request, response);
+              } else {
+                sendResponse(
+                  `basic-auth-unauthorized.html`,
+                  401,
+                  request,
+                  response
+                );
+              }
+            } else {
+              response.setHeader("WWW-Authenticate", "Basic realm=QQ");
+              sendResponse(
+                `basic-auth-unauthorized.html`,
+                401,
+                request,
+                response
+              );
+            }
+            break;
+          case "/fetch-redirect":
+            sendResponse(`fetch-redirect.html`, 200, request, response);
             break;
           default:
             sendResponse(`404${selector}.html`, 404, request, response);
@@ -320,16 +374,41 @@ const server = http.createServer(
         } else if (url === "/login-fail") {
           //307 重導向後還是 POST
           sendResponse(`login/login-fail${selector}.html`, 200, response);
-        } else if (url === "/api") {
+        } else if (url === "/httppost") {
           if (request.headers["origin"]) {
             response.setHeader(
               "Access-Control-Allow-Origin",
               request.headers["origin"]
             );
           }
-          response.statusCode = 200;
-          response.end();
+
+          console.log(
+            `POST 的 body 長度: ${request.headers["content-length"]} bytes`
+          );
+
+          let body = "";
+          console.log("req.setEncoding", request.setEncoding);
+          // request.setEncoding("utf16le");
+          // 接受到的 Buffer 物件為 <Buffer ef bb bf 4b ef bb bf 4b>
+          request.setEncoding("utf8");
+          request.on("data", (chunk) => {
+            console.log("chunk", chunk); // KK
+            body += chunk;
+          });
+
+          request.on("end", () => {
+            response.statusCode = 200;
+            response.writeHead(response.statusCode, {
+              "Content-Type": "text/html",
+            });
+            response.end(body);
+          });
+
+          response.on("finish", () => {
+            console.log("response is finished~~");
+          });
         }
+
         break;
       case "DELETE":
         if (request.headers["origin"]) {

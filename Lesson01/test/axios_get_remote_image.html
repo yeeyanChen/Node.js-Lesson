@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="main"></div>
+    <button onclick="setImage()">setImage</button>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.js"
+      integrity="sha512-MNW6IbpNuZZ2VH9ngFhzh6cUt8L/0rSVa60F8L22K1H72ro4Ki3M/816eSDLnhICu7vwH/+/yb8oB3BtBLhMsA=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      function setImage() {
+        axios({
+          method: "get",
+          url: "http://bit.ly/2mTM3nY",
+          responseType: "blob",
+        }).then(function (response) {
+          console.log(response.data);
+
+          let url = URL.createObjectURL();
+          let img = new Image();
+          img.src = url;
+          document.getElementById("main").appendChild(img);
+          img.onload = () => {
+            URL.revokeObjectURL(img.src);
+          };
+        });
+      }
+    </script>
+  </body>
+</html>

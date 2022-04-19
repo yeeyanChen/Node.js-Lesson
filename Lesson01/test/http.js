@@ -1,17 +1,22 @@
 const http = require("http");
 const options = {
   // path: "/yeeyan/forms/1#!/1/6",
-  host: "localhost",
+  host: "192.168.1.110",
+  // host: "162.240.12.17",
   port: 8080,
-  path: "/login",
+  path: "/api",
+  // method: "DELETE",
+  // headers: { YEEYAN: "COOL!" },
 };
 
 const req = http.request(options, (res) => {
-  res.setEncoding("utf8");
-  console.log(res.statusCode);
+  res.setEncoding("utf16le");
+  console.log(res.constructor); // IncomingMessage
+  console.log(`statusCode: ${res.statusCode}`);
 
   res.on("data", (chunk) => {
-    console.log(chunk.length);
+    // process.stdout.write(chunk);
+    console.log(chunk);
   });
 
   res.on("end", (chunk) => {
@@ -19,6 +24,10 @@ const req = http.request(options, (res) => {
   });
 });
 
+req.setHeader("YEEYAN", "COOL!");
+console.log(req.setDefaultEncoding);
+console.log(req.setEncoding);
+console.log(req.constructor); //ClientRequest
 req.end();
 
 // process.on("uncaughtException", function (err) {

@@ -33,7 +33,7 @@ class CustomReadable extends stream.Readable {
       }
       this._readableState.reading = false;
     } else {
-      this.push(null);
+      // this.push(null);
     }
   }
 }

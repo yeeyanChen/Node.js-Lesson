@@ -17,10 +17,18 @@ console.log(readable._readableState.defaultEncoding); //utf8
 //   console.log("data -> ", chunk);
 // });
 
-readable.on("readable", (chunk) => {
+readable.on("readable", function () {
   let read = readable.read();
   console.log("->", read);
   console.log("amount", read?.length);
+});
+
+setTimeout(function () {
+  console.log(readable.read());
+}, 2000);
+
+readable.on("end", function () {
+  console.log("end~~~");
 });
 
 // readable.on("data", (chunk) => {
