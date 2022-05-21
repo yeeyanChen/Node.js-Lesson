@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .outer {
+        background-color: rgb(255, 153, 153);
+        width: 500px;
+        height: 500px;
+      }
+      .inner {
+        background-color: rgb(106, 198, 252);
+        width: 200px;
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="outer"><div class="inner"></div></div>
+    <script>
+      // Let's get hold of those elements
+      var outer = document.querySelector(".outer");
+      var inner = document.querySelector(".inner");
+
+      // Let's listen for attribute changes on the
+      // outer element
+      new MutationObserver(function () {
+        console.log("mutate");
+      }).observe(outer, {
+        attributes: true,
+      });
+
+      new ResizeObserver((entries) => {
+        console.log("resize");
+      }).observe(outer);
+
+      function sleep(second) {
+        var start = +new Date();
+        while (start + second * 1000 > +new Date()) {}
+      }
+      // Here's a click listener…
+      function onClick() {
+        sleep(5);
+        console.log("click", event.currentTarget);
+
+        setTimeout(function () {
+          sleep(5);
+          console.log("timeout");
+          //   outer.setAttribute("data-random", Math.random());
+        }, 0);
+
+        Promise.resolve().then(function () {
+          console.log("promise");
+          Promise.resolve().then(function () {
+            console.log("promise2");
+          });
+        });
+
+        outer.setAttribute("data-random", Math.random());
+        outer.style.width = outer.clientWidth + 200 + "px";
+      }
+
+      // …which we'll attach to both elements
+      inner.addEventListener("click", onClick);
+      outer.addEventListener("click", onClick);
+
+      setTimeout(function () {
+        console.log("2 seconds reached");
+      }, 2000);
+
+      //   inner.click();
+      /*
+        click
+      */
+    </script>
+  </body>
+</html>

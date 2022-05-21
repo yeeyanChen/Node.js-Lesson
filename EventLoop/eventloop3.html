@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="button">button</button>
+    <script>
+      document
+        .getElementById("button")
+        .addEventListener("click", function test() {
+          document.body.style = "background:blue";
+          setTimeout(function test2() {
+            document.body.style = "background:black";
+          }, 0);
+        });
+    </script>
+  </body>
+</html>

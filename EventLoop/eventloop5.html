@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="button">button</button>
+    <script>
+      document
+        .getElementById("button")
+        .addEventListener("click", function test() {
+          document.body.style = "background:blue";
+          console.log(1);
+          setTimeout(function test2() {
+            console.log(5);
+            document.body.style = "background:red";
+          }, 0);
+          Promise.resolve()
+            .then(function test3() {
+              console.log(2);
+              document.body.style = "background:black";
+            })
+            .then(function test4() {
+              console.log(4);
+              document.body.style = "background:yellow";
+            });
+          console.log(3);
+        });
+    </script>
+  </body>
+</html>

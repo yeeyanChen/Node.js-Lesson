@@ -9,10 +9,10 @@ const options = {
 
 const req = http.request(options, (res) => {
   res.setEncoding("utf16le");
-  console.log(res.headers);
-  console.log(res.constructor); // IncomingMessage
-  console.log(`statusCode: ${res.statusCode}`);
-  console.log(`statusMessage: ${res.statusMessage}`);
+  // console.log(res.headers);
+  // console.log(res.constructor); // IncomingMessage
+  // console.log(`statusCode: ${res.statusCode}`);
+  // console.log(`statusMessage: ${res.statusMessage}`);
 
   res.on("data", (chunk) => {
     // process.stdout.write(chunk);
@@ -26,19 +26,20 @@ const req = http.request(options, (res) => {
 // req.method = "POST";
 
 req.setHeader("YEEYAN", "COOL!");
-console.log(req.getHeader("content-length"));
-console.log(req.getHeader("yeeyan"));
-console.log(req.constructor); //ClientRequest
-req.end("믯䮿믯䮿", "utf16le", () => {
-  console.log(req.writableFinished);
+// console.log(req.getHeader("content-length"));
+// console.log(req.getHeader("yeeyan"));
+// console.log(req.constructor); //ClientRequest
+console.log("req.writableEnded before", req.writableEnded);
 
+req.end("믯䮿믯䮿", "utf16le", () => {
+  console.log("[end] req.writableFinished", req.writableFinished);
   console.log("finish sending request1");
 });
 console.log("req.writableEnded", req.writableEnded);
 console.log("req.writableFinished", req.writableFinished);
 
 req.on("finish", () => {
-  console.log(req.writableFinished);
+  console.log("[finish] req.writableFinished", req.writableFinished);
   console.log("finish sending request2");
 });
 

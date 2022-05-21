@@ -7,7 +7,7 @@ const { Readable } = require("stream");
 const readStream = fs.createReadStream("./docs/doc03.txt");
 const writeStream = fs.createWriteStream("./docs/doc03.gz");
 
-writeStream.end();
+// writeStream.end();
 writeStream.on("finish", () => {
   console.log("finish");
 });

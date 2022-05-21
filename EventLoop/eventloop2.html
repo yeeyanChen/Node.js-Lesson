@@ -1,0 +1,14 @@
+<html lang="en">
+  <body>
+    <script>
+      function sleep(second) {
+        var start = +new Date();
+        while (start + second * 1000 > +new Date()) {}
+      }
+      document.body.style.backgroundColor = "red";
+      console.log(document.body.style.backgroundColor);
+      sleep(5);
+      document.body.style.backgroundColor = "blue";
+    </script>
+  </body>
+</html>

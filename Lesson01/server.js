@@ -149,7 +149,7 @@ const sendVideoResponse = (filename, statusCode, request, response) => {
 };
 
 const port = process.env.PORT || 8080;
-const ip = "192.168.1.107"; //wifi ip
+const ip = "192.168.1.113"; //wifi ip
 // const ip = "127.0.0.1"; //localhost //127.0.0.1/
 // const ip = "162.240.12.17"; //localhost //127.0.0.1/
 // const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
@@ -168,6 +168,9 @@ const server = http.createServer(
     // console.log(request);
     // console.log(url); //此 url 會包含 query string
 
+    response.setTimeout(1000, () => {
+      console.log("response time out");
+    });
     console.log(headers);
     console.log("url", url);
     let requestURL = new URL(url, `http://${ip}:${port}`);
@@ -257,6 +260,12 @@ const server = http.createServer(
           case "/exposeHeader":
             sendResponse(`exposeHeader.html`, 200, request, response);
             break;
+          case "/eventlooptest":
+            setTimeout(() => {
+              sendResponse(`exposeHeader.html`, 200, request, response);
+            }, 3000);
+
+            break;
           case "/api":
             if (request.headers["origin"]) {
               response.setHeader(
@@ -318,6 +327,9 @@ const server = http.createServer(
             break;
           case "/fetch-redirect":
             sendResponse(`fetch-redirect.html`, 200, request, response);
+            break;
+          case "/timeout":
+            // suspending , will throw time out error when config.timeout is set in axios
             break;
           default:
             sendResponse(`404${selector}.html`, 404, request, response);
@@ -424,9 +436,26 @@ const server = http.createServer(
 );
 
 // console.log(server);
-
+server.setTimeout(1000, (soc) => {
+  console.log("server is time out", soc.constructor); // server is time out  Socket {...}
+});
 server.listen(port, ip, () => {
   console.log(`Server is running at http://${ip}:${port}`);
 });
 
+// server.setTimeout(3000, () => {
+//   console.log("Socket is destroyed due to timeout");
+
+//   // Closing server
+//   // by using close() api
+//   server.close(() => {
+//     console.log("Server is closed");
+//   });
+// });
+
+// setTimeout(() => {
+//   server.close(() => {
+//     console.log(`Server is stopped at http://${ip}:${port}`);
+//   });
+// }, 2000);
 // server.listen(port);

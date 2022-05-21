@@ -1,0 +1,17 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "testshell": "C://web/Node.js/test.sh",
+    "dev": "node test.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "script1": "NPM_CONFIG_FOO=GOOD npm config get foo && npm_config_foo=bar npm config get foo"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
