@@ -171,7 +171,7 @@ const server = http.createServer(
     response.setTimeout(1000, () => {
       console.log("response time out");
     });
-    console.log(headers);
+    // console.log(headers);
     console.log("url", url);
     let requestURL = new URL(url, `http://${ip}:${port}`);
 
@@ -262,7 +262,7 @@ const server = http.createServer(
             break;
           case "/eventlooptest":
             setTimeout(() => {
-              sendResponse(`exposeHeader.html`, 200, request, response);
+              sendResponse(`index${selector}.html`, 200, request, response);
             }, 3000);
 
             break;

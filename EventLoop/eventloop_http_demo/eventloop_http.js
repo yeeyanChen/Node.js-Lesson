@@ -2,6 +2,8 @@ const http = require("http");
 const crypto = require("crypto");
 
 const start = Date.now();
+// const requestURL = "http://127.0.0.1:7000";
+const requestURL = "http://localhost:7000";
 
 function doHash() {
   crypto.pbkdf2("a", "b", 100000, 512, "sha512", () => {
@@ -10,7 +12,7 @@ function doHash() {
 }
 function doRequest() {
   http
-    .request("http://192.168.1.113:8080/eventlooptest", (res) => {
+    .request(requestURL, (res) => {
       res.on("data", () => {});
       res.on("end", () => {
         console.log("Request:", Date.now() - start);
@@ -32,3 +34,5 @@ doHash();
 doHash();
 doHash();
 doHash();
+
+// while (true) {}

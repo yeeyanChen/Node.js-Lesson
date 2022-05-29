@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="run()">RUN</button>
+    <script>
+      function run() {
+        setTimeout(function timer1() {
+          console.log("timer1");
+
+          Promise.resolve().then(function promise1() {
+            console.log("promise1");
+          });
+        }, 0);
+
+        setTimeout(function timer2() {
+          console.log("timer2");
+
+          Promise.resolve().then(function promise2() {
+            console.log("promise2");
+          });
+        }, 0);
+      }
+    </script>
+  </body>
+</html>
