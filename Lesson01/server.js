@@ -149,8 +149,8 @@ const sendVideoResponse = (filename, statusCode, request, response) => {
 };
 
 const port = process.env.PORT || 8080;
-const ip = "192.168.1.113"; //wifi ip
-// const ip = "127.0.0.1"; //localhost //127.0.0.1/
+// const ip = "192.168.1.113"; //wifi ip
+const ip = "localhost"; //localhost //127.0.0.1/
 // const ip = "162.240.12.17"; //localhost //127.0.0.1/
 // const ip = "https://my-nodejs-project-330710.de.r.appspot.com/"; //localhost //127.0.0.1
 
