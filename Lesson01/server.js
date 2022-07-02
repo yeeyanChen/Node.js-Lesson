@@ -36,8 +36,9 @@ const sendResponse = (url, statusCode, request, response) => {
   console.log("發送的 Cookie", request.headers["cookie"]);
 
   if (url === "20220316.html") {
+    console.log("set cookie nameQ");
     response.setHeader("Set-Cookie", [
-      "nameQ=yeeyan; sameSite=none; expires=" +
+      "nameQ=yeeyan; SameSite=none; Secure; expires=" +
         new Date(new Date().getTime() + 86400000).toUTCString(),
       "school=NTCU; max-age=600",
     ]);
@@ -49,6 +50,8 @@ const sendResponse = (url, statusCode, request, response) => {
       );
 
       response.setHeader("Access-Control-Allow-Credentials", true);
+      response.setHeader("Access-Control-Expose-Headers", "X-Yeeayn-Cool");
+      response.setHeader("X-Yeeayn-Cool", "Baby");
     }
   } else if (url === "exposeHeader.html") {
     response.setHeader("X-Yeeyan", "test");
@@ -168,9 +171,9 @@ const server = http.createServer(
     // console.log(request);
     // console.log(url); //此 url 會包含 query string
 
-    response.setTimeout(1000, () => {
-      console.log("response time out");
-    });
+    // response.setTimeout(1000, () => {
+    //   console.log("response time out");
+    // });
     // console.log(headers);
     console.log("url", url);
     let requestURL = new URL(url, `http://${ip}:${port}`);
@@ -191,11 +194,14 @@ const server = http.createServer(
             request.headers["origin"]
           );
 
-          response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE");
+          response.setHeader("Access-Control-Allow-Methods", "POST");
+
           response.setHeader(
             "Access-Control-Allow-Headers",
-            "yeeyan,content-type"
+            "x-yeeyan,content-type"
           );
+
+          response.setHeader("Access-Control-Allow-Credentials", "true");
           // response.setHeader("Access-Control-Max-Age", 1 * 60);
 
           response.statusCode = 200;
@@ -429,6 +435,7 @@ const server = http.createServer(
             request.headers["origin"]
           );
         }
+
         response.statusCode = 200;
         response.end();
     }
@@ -436,9 +443,9 @@ const server = http.createServer(
 );
 
 // console.log(server);
-server.setTimeout(1000, (soc) => {
-  console.log("server is time out", soc.constructor); // server is time out  Socket {...}
-});
+// server.setTimeout(1000, (soc) => {
+//   console.log("server is time out", soc.constructor); // server is time out  Socket {...}
+// });
 server.listen(port, ip, () => {
   console.log(`Server is running at http://${ip}:${port}`);
 });
