@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
+console.log(process.env.NODE_ENV);
 
 //listen for request
 const port = 8080;
@@ -17,7 +18,7 @@ app.options(
     // preflightContinue: true,
     // optionsSuccessStatus: 200,
   })
-  // ,
+
   // (req, res, next) => {
   //   console.log("只有在 preflightContinue 設定為 true 時才會執行這個 callback");
   //   res.status(200); // 改變 preflighted response 的 status code 為 200 (預設為 204)
@@ -47,6 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about", (req, res) => {
+  res.cookie("about-node", "test", { maxAge: undefined });
   res.sendFile("./html/about.html", { root: __dirname });
 });
 
@@ -56,6 +58,10 @@ app.get("/about-us", (req, res) => {
 
 app.get("/socket-demo", (req, res) => {
   res.sendFile("./html/socket-demo.html", { root: __dirname });
+});
+
+app.get("/cookie", (req, res) => {
+  res.sendFile("./html/cookie.html", { root: __dirname });
 });
 
 //必須要在最下方

@@ -49,7 +49,7 @@ const sendResponse = (url, statusCode, request, response) => {
         request.headers["origin"]
       );
 
-      response.setHeader("Access-Control-Allow-Credentials", true);
+      // response.setHeader("Access-Control-Allow-Credentials", true);
       response.setHeader("Access-Control-Expose-Headers", "X-Yeeayn-Cool");
       response.setHeader("X-Yeeayn-Cool", "Baby");
     }
@@ -201,7 +201,7 @@ const server = http.createServer(
             "x-yeeyan,content-type"
           );
 
-          response.setHeader("Access-Control-Allow-Credentials", "true");
+          // response.setHeader("Access-Control-Allow-Credentials", "true");
           // response.setHeader("Access-Control-Max-Age", 1 * 60);
 
           response.statusCode = 200;
