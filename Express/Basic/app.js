@@ -64,6 +64,10 @@ app.get("/cookie", (req, res) => {
   res.sendFile("./html/cookie.html", { root: __dirname });
 });
 
+app.get("/currenttime", (req, res) => {
+  res.sendFile("./html/currenttime.html", { root: __dirname });
+});
+
 //必須要在最下方
 app.use((req, res) => {
   res.status(404).sendFile("./html/404.html", { root: __dirname });

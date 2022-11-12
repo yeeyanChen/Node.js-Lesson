@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>這裡是駭客網站 嘿嘿嘿!</h2>
+    <button id="button">fetch cookie</button><br />
+    <a href="javascript:startCSRF()">點擊開始測驗</a><br />
+    <a href="http://localhost:5050/cookie">http://localhost:5050/cookie</a
+    ><br />
+    <a href="http://localhost:5050">http://localhost:5050</a><br />
+    <!-- <img src="http://localhost:5050" /> -->
+    <script>
+      document
+        .getElementById("button")
+        .addEventListener("click", function test() {
+          fetch("http://localhost:5050", {
+            headers: {
+              Cookie: "jojo=ouo",
+            },
+          });
+        });
+
+      function setCookie(name, value, exdays) {
+        exdays = exdays || 365;
+        let d = new Date();
+        d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+      }
+      function startCSRF() {
+        setCookie("");
+        location.href = "http://localhost:5050/cookie";
+      }
+    </script>
+  </body>
+</html>

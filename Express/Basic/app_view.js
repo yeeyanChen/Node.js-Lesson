@@ -1,5 +1,6 @@
 const express = require("express");
-
+var csrf = require("csurf");
+var bodyParser = require("body-parser");
 const morgan = require("morgan");
 const qs = require("qs");
 
@@ -70,6 +71,10 @@ app.get("/about", (req, res) => {
   console.log(req.fresh);
   console.log(req.query);
   res.render("about");
+});
+
+app.get("/csrfhacker", (req, res) => {
+  res.render("csrfhacker");
 });
 
 // app.get("/style.css", (req, res) => {

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="button">fetch server time</button><br />
+    <button id="CSRF_login">CSRF_login</button><br />
+    <a href="http://localhost:446?login">ragic</a><br />
+    <button onclick="document.getElementById('csrf-form').submit()">
+      csrf click me</button
+    ><br />
+
+    <iframe style="display: none" name="csrf-frame"></iframe>
+    <form
+      method="GET"
+      action="https://localhost:446"
+      target="csrf-frame"
+      id="csrf-form"
+    ></form>
+
+    <script>
+      document
+        .getElementById("button")
+        .addEventListener("click", function test() {
+          fetch("https://localhost:446/api/http/getServerCurrentTime.jsp?api")
+            .then(function (res) {
+              return res.text();
+            })
+            .then(function (res) {
+              console.log(res);
+            });
+        });
+
+      document
+        .getElementById("CSRF_login")
+        .addEventListener("click", function test() {
+          fetch("https://localhost:446/sims/reg/loginForm.jsp?api", {
+            credentials: "include",
+          })
+            .then(function (res) {
+              return res.text();
+            })
+            .then(function (res) {
+              console.log(res);
+            });
+        });
+    </script>
+  </body>
+</html>

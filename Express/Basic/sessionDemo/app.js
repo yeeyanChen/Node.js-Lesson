@@ -2,10 +2,19 @@ var escapeHtml = require("escape-html");
 var express = require("express");
 var session = require("express-session");
 const cookieParser = require("cookie-parser");
+const crypto = require("crypto");
+const cors = require("cors");
 
 var app = express();
 
+console.log("import.meta", import.meta);
 app.use(cookieParser());
+
+let corsOptions = {
+  origin: ["http://localhost:3000"], // 改成 * 就能避免 Synchronizer token pattern 被駭客發出 CORS 偷取 CSRF token 的漏洞
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use(
   session({
@@ -13,9 +22,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     // rolling: true,
-    // cookie: {
-    //   maxAge: 3000,
-    // },
+    cookie: {
+      maxAge: 3600000,
+    },
   })
 );
 
@@ -47,10 +56,20 @@ app.get("/cookie", isAuthenticated, function (req, res) {
 });
 
 app.get("*", function (req, res) {
+  console.log(req.url, "設定 login page");
+
+  console.log(req.session.id);
+  // if (!req.session.csrftoken) {
+  //   let buf = crypto.randomBytes(256);
+  //   let csrftoken = buf.toString("hex");
+  //   req.session.csrftoken = csrftoken;
+  // }
+
   res.send(
     '<form action="/login" method="post">' +
       'Username: <input name="user"><br>' +
       'Password: <input name="pass" type="password"><br>' +
+      // `<input type="hidden" name="csrftoken" value="${req.session.csrftoken}"><br>` +
       '<input type="submit" text="Login"></form>'
   );
 });
@@ -64,6 +83,14 @@ app.post(
 
     // regenerate the session, which is good practice to help
     // guard against forms of session fixation
+
+    // console.log("body 的 csrf token", req.body.csrftoken);
+    // console.log("session 的 csrf token", req.session.csrftoken);
+
+    // if (req.body.csrftoken !== req.session.csrftoken) {
+    //   console.log("session expired");
+    //   res.send("Error");
+    // } else {
     req.session.regenerate(function (err) {
       if (err) next(err);
 
@@ -77,6 +104,7 @@ app.post(
         res.redirect("/");
       });
     });
+    // }
   }
 );
 
