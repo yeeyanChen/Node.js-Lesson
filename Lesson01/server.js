@@ -109,10 +109,12 @@ const sendImgResponse = (filename, statusCode, request, response) => {
     } else {
       response.statusCode = statusCode;
 
-      response.setHeader(
-        "Content-Disposition",
-        `inline;filename*=utf-8''${filename};filename=${filename}`
-      );
+      // response.setHeader(
+      //   "Content-Disposition",
+      //   `inline;filename*=utf-8''${filename};filename=${filename}`
+      // );
+      response.setHeader("Etag", "fadf123");
+      response.setHeader("Cache-Control", "public, max-age=0, must-revalidate");
       response.setHeader("Content-Type", "image/png");
       response.end(data);
     }

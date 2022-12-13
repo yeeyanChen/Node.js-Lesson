@@ -10,6 +10,8 @@ app.listen(port, () => {
   console.log(`Server is now listening at http://localhost:${port}`);
 });
 
+app.use(express.static(__dirname + "/public"));
+
 app.options(
   "/cors",
   cors({

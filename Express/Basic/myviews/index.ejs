@@ -5,9 +5,82 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %></title>
-    <link rel="stylesheet" href="./style.css" />
+    <!-- <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin=""
+      href="https://fonts.gstatic.com/s/rubikdistressed/v1/GFDxWBdsmnqAVqjtUsZf2dcrQ2ldQWora-VB.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin=""
+      href="https://fonts.gstatic.com/s/rubikdistressed/v1/GFDxWBdsmnqAVqjtUsZf2dcrQ2ldQWMra-VB.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin=""
+      href="https://fonts.gstatic.com/s/rubikdistressed/v1/GFDxWBdsmnqAVqjtUsZf2dcrQ2ldQWUra-VB.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin=""
+      href="https://fonts.gstatic.com/s/rubikdistressed/v1/GFDxWBdsmnqAVqjtUsZf2dcrQ2ldQWkra-VB.woff2"
+    />
+    -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin=""
+      href="https://fonts.gstatic.com/s/rubikdistressed/v1/GFDxWBdsmnqAVqjtUsZf2dcrQ2ldQWcraw.woff2"
+    />
+    <!-- <link rel="preload" as="video" type="video/mp4" href="assets/home.mp4" /> -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/otf"
+      href="/assets/fonts/Rosalie.otf"
+      crossorigin=""
+    />
+
+    <style>
+      @font-face {
+        font-family: myFirstFont;
+        src: url("http://localhost:3000/assets/fonts/Rosalie.otf");
+      }
+      .nice-font {
+        font-family: myFirstFont, serif;
+      }
+      .nice-font2 {
+        font-family: "Rubik Distressed", serif;
+      }
+    </style>
+
+    <link rel="preload" as="style" href="script.js" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Rubik+Distressed"
+    />
+
+    <!-- <link
+      rel="preload"
+      as="font"
+      href="/assets/fonts/Rosalie.otf"
+      crossorigin=""
+    /> -->
   </head>
   <body>
+    <!-- <h1 class="nice-font">Nice Yeeyan</h1> -->
+    e04
+    <h1 class="nice-font">Nice Yeeyan~</h1>
+    <h1 class="nice-font2">Pls carry me!</h1>
     <%- include('./partials/nav.ejs') %> <% const name = "mario" %> Home
     <%=name%> <%= title %>
     <div>
@@ -17,5 +90,18 @@
       <% }); %>
     </div>
     <%- include('./partials/footer.ejs') %>
+    <script type="text/javascript" src="http://localhost:3000/a.js"></script>
+    <!-- <script
+      type="text/javascript"
+      src="http://localhost:8080/public/b.js"
+      crossorigin=""
+    ></script> -->
+    <video style="width: 300px" controls autoplay muted>
+      <source src="/assets/home.mp4" type="video/mp4" />
+    </video>
+    <!-- <script type="text/javascript" src="utils.js"></script> -->
+    <img src="/assets/footer.jpg" width="200" />
+
+    <link rel="stylesheet" href="./style.css" />
   </body>
 </html>

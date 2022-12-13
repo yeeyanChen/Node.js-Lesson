@@ -1,8 +1,9 @@
 const express = require("express");
-var csrf = require("csurf");
+// var csrf = require("csurf");
 var bodyParser = require("body-parser");
 const morgan = require("morgan");
 const qs = require("qs");
+var serveStatic = require("serve-static");
 
 console.log(qs);
 const fs = require("fs");
@@ -24,6 +25,12 @@ app.listen(port, () => {
 });
 
 app.use(express.static(__dirname + "/public"));
+app.use(
+  "/assets",
+  express.static(__dirname + "/assets", {
+    setHeaders: setCustomCacheControl,
+  })
+);
 
 // app.use(
 //   morgan(function (tokens, req, res) {
@@ -64,17 +71,40 @@ const users = [
 
 app.get("/", (req, res) => {
   //   res.send("<h1>Home Page</h1>");
+  res.setHeader("Cache-Control", "public, no-cache");
+
   res.render("index", { title: "yeeyan", users });
 });
 
 app.get("/about", (req, res) => {
   console.log(req.fresh);
   console.log(req.query);
+  res.setHeader("Link", "</assets/footer.jpg>; rel=preload; as=image");
   res.render("about");
 });
 
 app.get("/csrfhacker", (req, res) => {
   res.render("csrfhacker");
+});
+
+app.get("/resourcehint", (req, res) => {
+  res.render("resourcehint", { title: "yeeyan", users });
+});
+
+app.get("/deferunusedcss", (req, res) => {
+  res.render("deferunusedcss", { title: "yeeyan", users });
+});
+
+app.get("/deferunusedcss2", (req, res) => {
+  res.render("deferunusedcss2", { title: "yeeyan", users });
+});
+
+app.get("/fouc", (req, res) => {
+  res.render("fouc", { title: "yeeyan", users });
+});
+
+app.get("/preconnect", (req, res) => {
+  res.render("preconnect", { title: "yeeyan", users });
 });
 
 // app.get("/style.css", (req, res) => {
@@ -98,3 +128,26 @@ app.use((req, res) => {
   res.sendStatus(404);
   // res.status(404).render("404");
 });
+
+function setCustomCacheControl(res, path) {
+  let mime = serveStatic.mime.lookup(path);
+  console.log("setCustomCacheControl", mime);
+  if (mime === "image/jpeg") {
+    // Custom Cache-Control for image
+    // res.setHeader(
+    //   "Cache-Control",
+    //   "public, max-age=5, stale-while-revalidate=3600"
+    // );
+    // res.setHeader("Cache-Control", "max-age=3600");
+    // res.setHeader("Cache-Control", "no-store");
+    // res.setHeader("Cache-Control", "max-age=60");
+    // res.setHeader("Link", "; rel=preload; as=image");
+    // res.setHeader("Cache-Control", "public, max-age=5");
+    // res.setHeader("Cache-Control", "immutable");
+  } else if (mime === "text/css") {
+    // res.setHeader(
+    //   "Link",
+    //   "<http://localhost:3000/assets/style.css>; rel=preload; as=style"
+    // );
+  }
+}
