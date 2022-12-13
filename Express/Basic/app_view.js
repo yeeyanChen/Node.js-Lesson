@@ -21,7 +21,9 @@ app.set("views", __dirname + "/myviews"); //設定 .ejs 存的路徑
 const port = 3000;
 
 app.listen(port, () => {
-  console.log(`Serve is now listening at http://localhost:${port}`);
+  console.log(
+    `Serve is now listening at http://delicate-gumption-22d18c.netlify.app:${port}`
+  );
 });
 
 app.use(express.static(__dirname + "/public"));
